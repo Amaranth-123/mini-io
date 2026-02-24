@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -7,82 +7,114 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #020617; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; }
-        .nav-logo { padding: 20px 40px; font-family: 'Orbitron', sans-serif; color: #38bdf8; font-size: 1.4rem; }
+        body { background-color: #020617; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        .nav-logo { padding: 15px 20px; font-family: 'Orbitron', sans-serif; color: #38bdf8; font-size: 1.2rem; }
         
-        #games { padding: 10px; max-width: 1100px; margin: 0 auto; text-align: center; }
-        .section-title { font-family: 'Orbitron', sans-serif; margin: 30px 0; color: #38bdf8; letter-spacing: 4px; font-size: 1rem; }
+        #games { padding: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .section-title { font-family: 'Orbitron', sans-serif; margin: 20px 0; color: #38bdf8; letter-spacing: 2px; font-size: 0.9rem; }
         
+        /* Poki Style Grid */
         .game-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+        }
+
+        @media (min-width: 768px) {
+            .game-grid { 
+                grid-template-columns: repeat(6, 1fr); 
+                gap: 15px;
+            }
         }
 
         .game-card { 
             background: rgba(15, 23, 42, 0.8); 
-            border-radius: 15px; 
+            border-radius: 12px; 
             border: 1px solid rgba(56, 189, 248, 0.2); 
             overflow: hidden; 
-            transition: 0.4s; 
+            transition: 0.3s; 
             display: flex;
             flex-direction: column;
+            cursor: pointer;
         }
         
         .game-card:hover { transform: translateY(-5px); border-color: #38bdf8; }
         
-        .game-img { 
+        .game-img, .coming-soon-box { 
             width: 100%; 
-            height: 150px; 
-            object-fit: contain; 
+            aspect-ratio: 1 / 1; 
+            object-fit: cover; 
             background: #0f172a; 
-            padding: 10px; 
             display: block; 
         }
 
-        /* Coming Soon Styling */
         .coming-soon-box {
-            width: 100%;
-            height: 150px;
-            background: #0f172a;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #38bdf8;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
+            font-size: 1.5rem;
             opacity: 0.5;
-            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
         }
 
-        .card-content { padding: 15px; background: rgba(15, 23, 42, 0.9); flex-grow: 1; }
-        .game-card h3 { font-family: 'Orbitron', sans-serif; color: #38bdf8; margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; }
-        
-        .play-btn { 
-            display: inline-block; 
-            padding: 8px 20px; 
-            background: #38bdf8; 
-            color: #020617; 
-            font-weight: bold; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            border: none; 
+        .card-content { padding: 8px; background: rgba(15, 23, 42, 0.9); }
+        .game-card h3 { 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 0.7rem; 
+            color: #38bdf8; 
+            font-size: 0.6rem; 
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .play-btn { display: none; }
+
+        .bottom-signature { position: fixed; bottom: 10px; right: 20px; opacity: 0.3; pointer-events: none; }
+        .ft-text { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #38bdf8; font-weight: 900; }
+
+        /* MODAL UPDATE: Game ko fit karne ke liye */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.95); 
+        }
+        .modal-content { 
+            position: relative; 
+            margin: 5vh auto; 
+            width: 95%; 
+            max-width: 900px; 
+            background: #000; 
+            border: 2px solid #38bdf8; 
+            border-radius: 15px; 
+            overflow: hidden; 
+        }
+        .close-btn { 
+            position: absolute; 
+            right: 15px; 
+            top: 5px; 
+            color: #fff; 
+            font-size: 35px; 
+            cursor: pointer; 
+            z-index: 1001; 
+            text-shadow: 0 0 10px #000;
+        }
+        
+        /* Iframe Responsive */
+        #gameFrame {
+            width: 100%;
+            height: 70vh; /* Mobile par screen ke hisab se height */
+            display: block;
         }
 
-        .btn-disabled {
-            background: #1e293b !important;
-            color: #475569 !important;
-            cursor: not-allowed !important;
+        @media (min-width: 768px) {
+            #gameFrame { height: 550px; } /* Desktop par fixed height */
         }
-
-        .bottom-signature { position: fixed; bottom: 20px; right: 40px; opacity: 0.3; }
-        .ft-text { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #1e293b; font-weight: 900; }
-
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
-        .modal-content { position: relative; margin: 2% auto; width: 90%; max-width: 800px; background: #000; border: 1px solid #38bdf8; border-radius: 10px; overflow: hidden; }
-        .close-btn { position: absolute; right: 20px; top: 10px; color: white; font-size: 40px; cursor: pointer; z-index: 1001; }
     </style>
 </head>
 <body>
@@ -90,39 +122,41 @@
     <nav class="nav-logo">mini.io</nav>
 
     <section id="games">
-        <h2 class="section-title">CHOOSE YOUR MISSION</h2>
+        <h2 class="section-title">POPULAR MISSIONS</h2>
         <div class="game-grid">
             
-            <div class="game-card">
+            <div class="game-card" onclick="openGame('math')">
                 <img src="math.png" class="game-img">
                 <div class="card-content">
                     <h3>BRAIN RUSH</h3>
-                    <button onclick="openGame('math')" class="play-btn">PLAY NOW</button>
                 </div>
             </div>
 
-            <div class="game-card">
+            <div class="game-card" onclick="openGame('bird')">
                 <img src="Flappy Bird.png" class="game-img">
                 <div class="card-content">
                     <h3>FLAPPY BIRD</h3>
-                    <button onclick="openGame('bird')" class="play-btn">PLAY NOW</button>
                 </div>
             </div>
 
-            <div class="game-card">
+            <div class="game-card" onclick="openGame('racer')">
                 <img src="racer.jpg" class="game-img">
                 <div class="card-content">
                     <h3>HIGHWAY RACER</h3>
-                    <button onclick="openGame('racer')" class="play-btn">PLAY NOW</button>
                 </div>
             </div>
 
             <div class="game-card">
                 <div class="coming-soon-box">?</div>
-                <div class="card-content">
-                    <h3>NEW MISSION</h3>
-                    <button class="play-btn btn-disabled">COMING SOON</button>
-                </div>
+                <div class="card-content"><h3>SOON</h3></div>
+            </div>
+            <div class="game-card">
+                <div class="coming-soon-box">?</div>
+                <div class="card-content"><h3>SOON</h3></div>
+            </div>
+            <div class="game-card">
+                <div class="coming-soon-box">?</div>
+                <div class="card-content"><h3>SOON</h3></div>
             </div>
 
         </div>
@@ -133,7 +167,7 @@
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame" src="" width="100%" height="550px" frameborder="0"></iframe>
+            <iframe id="gameFrame" src="" frameborder="0" scrolling="no"></iframe>
         </div>
     </div>
 
@@ -142,6 +176,9 @@
             var modal = document.getElementById("gameModal");
             var frame = document.getElementById("gameFrame");
             modal.style.display = "block";
+            // Disable background scroll
+            document.body.style.overflow = "hidden";
+            
             if(game === 'math') frame.src = "https://itch.io/embed-upload/16529289?color=333333";
             else if(game === 'bird') frame.src = "https://itch.io/embed-upload/16498220?color=333333";
             else if(game === 'racer') frame.src = "https://itch.io/embed-upload/16530096?color=333333";
@@ -149,6 +186,8 @@
         function closeGame() {
             document.getElementById("gameModal").style.display = "none";
             document.getElementById("gameFrame").src = ""; 
+            // Re-enable scroll
+            document.body.style.overflow = "auto";
         }
         window.onclick = function(event) {
             if (event.target == document.getElementById("gameModal")) closeGame();
